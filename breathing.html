@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深呼吸干预 - 自律计时器</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .breathing-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .breathing-header {
+            margin-bottom: 20px;
+        }
+
+        .breathing-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .breathing-subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .online-tag {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .online-tag .dot {
+            color: #4CAF50;
+            margin-right: 6px;
+            animation: blink 2s infinite;
+        }
+
+        .online-tag .highlight {
+            color: #fff;
+            font-weight: bold;
+            margin: 0 4px;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .breathing-circle-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 30px;
+            cursor: pointer;
+            touch-action: none;
+        }
+
+        .breathing-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .breathing-circle.inhaling {
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+
+        .breathing-circle.exhaling {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .breathing-text {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .breathing-instruction {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .breathing-encouragement {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .breathing-stats {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .stat-label {
+            color: #666;
+        }
+
+        .stat-value {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .progress-container {
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #e0e0e0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            transition: width 0.3s ease;
+        }
+
+        .breathing-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #666;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .breathing-tips {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .breathing-tips h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        .breathing-tips ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
+        .breathing-tips li {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        /* 状态指示 */
+        .state-ready {
+            color: #667eea;
+        }
+
+        .state-inhaling {
+            color: #4CAF50;
+        }
+
+        .state-exhaling {
+            color: #2196F3;
+        }
+
+        .state-holding {
+            color: #FFC107;
+        }
+
+        /* 完成模态框 */
+        .completion-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .modal-message {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breathing-container">
+            <div class="breathing-header">
+                <h1 class="breathing-title">🌬️ 深呼吸干预</h1>
+                <p class="breathing-subtitle">阻断冲动回路</p>
+                <div class="online-tag">
+                    <span class="dot">●</span>
+                    当前有 <span class="highlight" id="onlineCount">521</span> 位战友正在共同守护
+                </div>
+            </div>
+
+            <div class="breathing-circle-container" id="breathingCircle">
+                <div class="breathing-circle" id="circle">
+                    <div class="breathing-text" id="circleText">按住开始</div>
+                </div>
+            </div>
+
+            <div class="breathing-instruction" id="instruction">准备好，开始深呼吸</div>
+            <div class="breathing-encouragement" id="encouragement">按住屏幕开始吸气（5秒）</div>
+
+            <div class="breathing-stats">
+                <div class="stat-row">
+                    <span class="stat-label">呼吸次数:</span>
+                    <span class="stat-value" id="breathCount">0/6</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">冲动阻断:</span>
+                    <span class="stat-value" id="impulseBlockProgress">0%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">恢复等级:</span>
+                    <span class="stat-value" id="impulseBlockLevel">低</span>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="breathing-tips">
+                <h3>深呼吸指导:</h3>
+                <ul>
+                    <li>按住圆圈开始吸气（5秒）</li>
+                    <li>松开手指开始呼气（5秒）</li>
+                    <li>完成6次完整呼吸周期</li>
+                    <li>专注于呼吸，放空思绪</li>
+                    <li>冲动会随着呼吸逐渐消退</li>
+                </ul>
+            </div>
+
+            <div class="breathing-actions">
+                <button class="btn-secondary" onclick="goBackToMain()">中断返回</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 完成模态框 -->
+    <div class="completion-modal" id="completionModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-title">🎉 深呼吸完成</div>
+            <div class="modal-message" id="completionMessage">
+                您已经完成了6次深呼吸练习！<br>
+                冲动已经过去，您成功阻断了冲动回路！<br>
+                当前有<span id="modalOnlineCount">521</span>位战友正在共同守护。
+            </div>
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="completeBreathing()">继续坚持</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 应用状态
+        const state = {
+            circleSize: 200,
+            circleScale: 1,
+            breathingState: 'ready', // ready, inhaling, exhaling, holding
+            instruction: '准备好，开始深呼吸',
+            encouragement: '按住屏幕开始吸气（5秒）',
+            onlineCount: 521,
+            fromSOS: false,
+            touchStartTime: 0,
+            inhaleDuration: 5000, // 吸气持续时间（5秒）
+            exhaleDuration: 5000, // 呼气持续时间（5秒）
+            breathCount: 0,
+            maxBreaths: 6,
+            impulseBlockProgress: 0,
+            impulseBlockLevel: '低',
+            impulseBlockDescription: '冲动阻断恢复：0%',
+            recoveryStartTime: 0,
+            recoveryTimer: null,
+            inhaleTimer: null,
+            exhaleTimer: null
+        };
+
+        // DOM元素
+        const elements = {
+            circle: document.getElementById('circle'),
+            circleText: document.getElementById('circleText'),
+            instruction: document.getElementById('instruction'),
+            encouragement: document.getElementById('encouragement'),
+            breathCount: document.getElementById('breathCount'),
+            impulseBlockProgress: document.getElementById('impulseBlockProgress'),
+            impulseBlockLevel: document.getElementById('impulseBlockLevel'),
+            progressFill: document.getElementById('progressFill'),
+            onlineCount: document.getElementById('onlineCount'),
+            modalOnlineCount: document.getElementById('modalOnlineCount'),
+            completionModal: document.getElementById('completionModal')
+        };
+
+        // 初始化页面
+        function initializePage() {
+            // 从URL参数获取数据
+            const params = getUrlParams();
+            state.fromSOS = params.fromSOS === 'true';
+
+            // 如果来自SOS按钮，显示特殊提示
+            if (state.fromSOS) {
+                alert('紧急干预已启动');
+            }
+
+            // 初始化呼吸指导
+            initBreathingGuide();
+
+            // 设置事件监听器
+            setupEventListeners();
+        }
+
+        // 从URL参数中获取数据
+        function getUrlParams() {
+            const params = {};
+            const queryString = window.location.search.substring(1);
+            const pairs = queryString.split('&');
+
+            for (let pair of pairs) {
+                const [key, value] = pair.split('=');
+                if (key && value) {
+                    params[key] = decodeURIComponent(value);
+                }
+            }
+
+            return params;
+        }
+
+        // 初始化呼吸指导
+        function initBreathingGuide() {
+            updateUI();
+            startRecoveryMonitoring();
+        }
+
+        // 更新UI
+        function updateUI() {
+            elements.instruction.textContent = state.instruction;
+            elements.encouragement.textContent = state.encouragement;
+            elements.breathCount.textContent = `${state.breathCount}/${state.maxBreaths}`;
+            elements.impulseBlockProgress.textContent = `${state.impulseBlockProgress}%`;
+            elements.impulseBlockLevel.textContent = state.impulseBlockLevel;
+            elements.circleText.textContent = getCircleText();
+
+            // 更新圆圈状态
+            elements.circle.className = 'breathing-circle ' + state.breathingState;
+
+            // 更新进度条
+            const progress = state.impulseBlockProgress;
+            elements.progressFill.style.width = progress + '%';
+
+            // 更新指令颜色
+            elements.instruction.className = 'breathing-instruction state-' + state.breathingState;
+        }
+
+        // 获取圆圈文本
+        function getCircleText() {
+            switch (state.breathingState) {
+                case 'ready': return '按住开始';
+                case 'inhaling': return '吸气中...';
+                case 'exhaling': return '呼气中...';
+                case 'holding': return '完成';
+                default: return '按住开始';
+            }
+        }
+
+        // 启动生理恢复监测
+        function startRecoveryMonitoring() {
+            // 清理现有定时器
+            if (state.recoveryTimer) {
+                clearInterval(state.recoveryTimer);
+            }
+
+            // 记录开始时间
+            state.recoveryStartTime = Date.now();
+
+            // 启动实时更新定时器（每秒更新）
+            state.recoveryTimer = setInterval(() => {
+                updateRecoveryProgress();
+            }, 1000);
+        }
+
+        // 更新冲动阻断恢复进度
+        function updateRecoveryProgress() {
+            const now = Date.now();
+            const elapsedTime = now - state.recoveryStartTime;
+            const totalDuration = state.maxBreaths * (state.inhaleDuration + state.exhaleDuration);
+            const progressRatio = Math.min(elapsedTime / totalDuration, 1);
+
+            // 计算冲动阻断恢复进度 - 使用混合曲线
+            const impulseBlockProgress = Math.min(Math.floor(hybridRecoveryCurve(progressRatio) * 100), 100);
+
+            // 根据冲动阻断进度确定等级和描述
+            let impulseBlockLevel = '低';
+            let impulseBlockDescription = `冲动阻断恢复：${impulseBlockProgress}%`;
+
+            if (impulseBlockProgress >= 80) {
+                impulseBlockLevel = '高';
+                impulseBlockDescription = `冲动阻断恢复：${impulseBlockProgress}% - 冲动回路已完全阻断`;
+            } else if (impulseBlockProgress >= 50) {
+                impulseBlockLevel = '中';
+                impulseBlockDescription = `冲动阻断恢复：${impulseBlockProgress}% - 冲动显著减弱`;
+            } else if (impulseBlockProgress >= 25) {
+                impulseBlockLevel = '低';
+                impulseBlockDescription = `冲动阻断恢复：${impulseBlockProgress}% - 冲动开始减弱`;
+            } else if (impulseBlockProgress >= 10) {
+                impulseBlockLevel = '低';
+                impulseBlockDescription = `冲动阻断恢复：${impulseBlockProgress}% - 开始阻断冲动`;
+            } else {
+                impulseBlockLevel = '低';
+                impulseBlockDescription = `冲动阻断恢复：${impulseBlockProgress}% - 准备阻断`;
+            }
+
+            state.impulseBlockProgress = impulseBlockProgress;
+            state.impulseBlockLevel = impulseBlockLevel;
+            state.impulseBlockDescription = impulseBlockDescription;
+
+            updateUI();
+        }
+
+        // 混合恢复曲线 - 结合对数和线性曲线
+        function hybridRecoveryCurve(x) {
+            if (x <= 0.5) {
+                // 前半部分使用对数曲线（快速恢复）
+                return Math.log(1 + 4 * x) / Math.log(5);
+            } else {
+                // 后半部分使用线性曲线（稳定恢复）
+                return 0.5 + 0.5 * (2 * x - 1);
+            }
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            const circleContainer = document.getElementById('breathingCircle');
+
+            // 触摸开始 - 吸气
+            circleContainer.addEventListener('touchstart', onTouchStart, { passive: false });
+            circleContainer.addEventListener('mousedown', onTouchStart);
+
+            // 触摸结束 - 呼气
+            circleContainer.addEventListener('touchend', onTouchEnd);
+            circleContainer.addEventListener('mouseup', onTouchEnd);
+            circleContainer.addEventListener('mouseleave', onTouchEnd);
+
+            // 阻止默认触摸行为
+            circleContainer.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+        }
+
+        // 触摸开始 - 吸气
+        function onTouchStart(e) {
+            if (state.breathingState !== 'ready' && state.breathingState !== 'holding') {
+                return;
+            }
+
+            // 阻止默认行为
+            if (e.preventDefault) e.preventDefault();
+
+            state.touchStartTime = Date.now();
+            state.breathingState = 'inhaling';
+            state.instruction = '吸气中...';
+            state.encouragement = '继续按住，吸气5秒';
+
+            updateUI();
+
+            // 启动吸气定时器
+            startInhaleTimer();
+        }
+
+        // 启动吸气定时器
+        function startInhaleTimer() {
+            // 清理现有定时器
+            if (state.inhaleTimer) {
+                clearTimeout(state.inhaleTimer);
+            }
+
+            // 吸气完成后自动开始呼气
+            state.inhaleTimer = setTimeout(() => {
+                if (state.breathingState === 'inhaling') {
+                    state.breathingState = 'exhaling';
+                    state.instruction = '呼气中...';
+                    state.encouragement = '松开手指，呼气5秒';
+
+                    updateUI();
+                    startExhaleTimer();
+                }
+            }, state.inhaleDuration);
+        }
+
+        // 触摸结束 - 呼气
+        function onTouchEnd(e) {
+            if (state.breathingState !== 'inhaling') {
+                return;
+            }
+
+            const touchDuration = Date.now() - state.touchStartTime;
+
+            // 检查是否达到最小吸气时间
+            if (touchDuration >= state.inhaleDuration * 0.8) {
+                // 清理吸气定时器
+                if (state.inhaleTimer) {
+                    clearTimeout(state.inhaleTimer);
+                    state.inhaleTimer = null;
+                }
+
+                state.breathingState = 'exhaling';
+                state.instruction = '呼气中...';
+                state.encouragement = '松开手指，呼气5秒';
+
+                updateUI();
+                startExhaleTimer();
+            } else {
+                // 吸气时间不足
+                resetBreathing();
+                state.instruction = '吸气时间不足';
+                state.encouragement = '请按住5秒完成吸气';
+                updateUI();
+            }
+        }
+
+        // 启动呼气定时器
+        function startExhaleTimer() {
+            // 清理现有定时器
+            if (state.exhaleTimer) {
+                clearTimeout(state.exhaleTimer);
+            }
+
+            // 呼气完成后更新状态
+            state.exhaleTimer = setTimeout(() => {
+                if (state.breathingState === 'exhaling') {
+                    completeBreathCycle();
+                }
+            }, state.exhaleDuration);
+        }
+
+        // 完成一个呼吸周期
+        function completeBreathCycle() {
+            const newCount = state.breathCount + 1;
+
+            state.breathCount = newCount;
+            state.breathingState = 'holding';
+            state.instruction = '呼吸完成';
+            state.encouragement = `已完成${newCount}/${state.maxBreaths}次呼吸`;
+
+            updateUI();
+
+            // 检查是否完成所有呼吸周期
+            if (newCount >= state.maxBreaths) {
+                completeAllBreathing();
+            } else {
+                // 准备下一个呼吸周期
+                setTimeout(() => {
+                    state.breathingState = 'ready';
+                    state.instruction = '准备好';
+                    state.encouragement = '按住屏幕开始下一次吸气';
+                    updateUI();
+                }, 2000);
+            }
+        }
+
+        // 完成所有呼吸周期
+        function completeAllBreathing() {
+            // 清理定时器
+            cleanupTimers();
+
+            // 显示完成模态框
+            elements.completionModal.style.display = 'flex';
+            elements.modalOnlineCount.textContent = state.onlineCount;
+        }
+
+        // 完成深呼吸
+        function completeBreathing() {
+            // 隐藏模态框
+            elements.completionModal.style.display = 'none';
+
+            // 返回主页
+            window.location.href = 'index.html';
+        }
+
+        // 重置呼吸状态
+        function resetBreathing() {
+            // 清理定时器
+            if (state.inhaleTimer) {
+                clearTimeout(state.inhaleTimer);
+                state.inhaleTimer = null;
+            }
+
+            if (state.exhaleTimer) {
+                clearTimeout(state.exhaleTimer);
+                state.exhaleTimer = null;
+            }
+
+            state.breathingState = 'ready';
+            updateUI();
+        }
+
+        // 返回主页
+        function goBackToMain() {
+            if (confirm('确定要中断深呼吸练习吗？建议完成整个过程以获得最佳效果。')) {
+                cleanupTimers();
+                window.location.href = 'index.html';
+            }
+        }
+
+        // 清理所有定时器
+        function cleanupTimers() {
+            if (state.recoveryTimer) {
+                clearInterval(state.recoveryTimer);
+                state.recoveryTimer = null;
+            }
+
+            if (state.inhaleTimer) {
+                clearTimeout(state.inhaleTimer);
+                state.inhaleTimer = null;
+            }
+
+            if (state.exhaleTimer) {
+                clearTimeout(state.exhaleTimer);
+                state.exhaleTimer = null;
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initializePage);
+
+        // 页面卸载时清理
+        window.addEventListener('beforeunload', cleanupTimers);
+    </script>
+</body>
+</html>

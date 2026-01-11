@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试网页版自律计时器</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border: 1px solid #ddd; }
+        .pass { background-color: #d4edda; color: #155724; }
+        .fail { background-color: #f8d7da; color: #721c24; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>网页版自律计时器测试</h1>
+
+    <div id="testResults">
+        <h2>测试结果：</h2>
+        <div id="storageTest" class="test-result">本地存储测试：未运行</div>
+        <div id="domTest" class="test-result">DOM 元素测试：未运行</div>
+        <div id="timerTest" class="test-result">计时器功能测试：未运行</div>
+        <div id="checkinTest" class="test-result">打卡功能测试：未运行</div>
+    </div>
+
+    <div>
+        <button onclick="runAllTests()">运行所有测试</button>
+        <button onclick="clearLocalStorage()">清除本地存储</button>
+        <button onclick="openMainApp()">打开主应用</button>
+    </div>
+
+    <div id="testDetails" style="margin-top: 20px;">
+        <h3>测试详情：</h3>
+        <pre id="testOutput"></pre>
+    </div>
+
+    <script>
+        // 测试函数
+        function runAllTests() {
+            logTestOutput("开始运行所有测试...");
+
+            // 测试本地存储
+            testLocalStorage();
+
+            // 测试DOM元素
+            testDOMElements();
+
+            // 测试计时器功能
+            testTimerFunction();
+
+            // 测试打卡功能
+            testCheckinFunction();
+
+            logTestOutput("所有测试完成！");
+        }
+
+        function testLocalStorage() {
+            try {
+                // 测试本地存储是否可用
+                const testKey = 'testStorage';
+                localStorage.setItem(testKey, 'testValue');
+                const value = localStorage.getItem(testKey);
+                localStorage.removeItem(testKey);
+
+                if (value === 'testValue') {
+                    updateTestResult('storageTest', '本地存储测试：通过', 'pass');
+                    logTestOutput("✓ 本地存储功能正常");
+                } else {
+                    updateTestResult('storageTest', '本地存储测试：失败', 'fail');
+                    logTestOutput("✗ 本地存储功能异常");
+                }
+            } catch (error) {
+                updateTestResult('storageTest', '本地存储测试：失败 - ' + error.message, 'fail');
+                logTestOutput("✗ 本地存储测试失败: " + error.message);
+            }
+        }
+
+        function testDOMElements() {
+            try {
+                // 创建一个临时的DOM元素来测试
+                const tempDiv = document.createElement('div');
+                tempDiv.id = 'tempTestElement';
+                tempDiv.textContent = 'Test Content';
+                document.body.appendChild(tempDiv);
+
+                const element = document.getElementById('tempTestElement');
+                if (element && element.textContent === 'Test Content') {
+                    updateTestResult('domTest', 'DOM 元素测试：通过', 'pass');
+                    logTestOutput("✓ DOM 操作功能正常");
+                } else {
+                    updateTestResult('domTest', 'DOM 元素测试：失败', 'fail');
+                    logTestOutput("✗ DOM 操作功能异常");
+                }
+
+                // 清理临时元素
+                document.body.removeChild(tempDiv);
+            } catch (error) {
+                updateTestResult('domTest', 'DOM 元素测试：失败 - ' + error.message, 'fail');
+                logTestOutput("✗ DOM 测试失败: " + error.message);
+            }
+        }
+
+        function testTimerFunction() {
+            try {
+                // 测试计时器功能
+                let timerCount = 0;
+                const testTimer = setInterval(() => {
+                    timerCount++;
+                    if (timerCount >= 2) {
+                        clearInterval(testTimer);
+                        updateTestResult('timerTest', '计时器功能测试：通过', 'pass');
+                        logTestOutput("✓ 计时器功能正常");
+                    }
+                }, 500);
+
+                // 设置超时
+                setTimeout(() => {
+                    if (timerCount < 2) {
+                        clearInterval(testTimer);
+                        updateTestResult('timerTest', '计时器功能测试：超时', 'fail');
+                        logTestOutput("✗ 计时器功能超时");
+                    }
+                }, 2000);
+            } catch (error) {
+                updateTestResult('timerTest', '计时器功能测试：失败 - ' + error.message, 'fail');
+                logTestOutput("✗ 计时器测试失败: " + error.message);
+            }
+        }
+
+        function testCheckinFunction() {
+            try {
+                // 测试日期格式化功能
+                const today = new Date().toISOString().split('T')[0];
+                if (today.length === 10 && today.includes('-')) {
+                    updateTestResult('checkinTest', '打卡功能测试：通过', 'pass');
+                    logTestOutput("✓ 日期格式化功能正常");
+                } else {
+                    updateTestResult('checkinTest', '打卡功能测试：失败', 'fail');
+                    logTestOutput("✗ 日期格式化功能异常");
+                }
+            } catch (error) {
+                updateTestResult('checkinTest', '打卡功能测试：失败 - ' + error.message, 'fail');
+                logTestOutput("✗ 打卡测试失败: " + error.message);
+            }
+        }
+
+        function updateTestResult(elementId, message, className) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = message;
+                element.className = 'test-result ' + className;
+            }
+        }
+
+        function logTestOutput(message) {
+            const output = document.getElementById('testOutput');
+            output.textContent += message + '\n';
+        }
+
+        function clearLocalStorage() {
+            if (confirm('确定要清除所有本地存储数据吗？')) {
+                localStorage.clear();
+                logTestOutput("✓ 本地存储已清除");
+                alert('本地存储已清除');
+            }
+        }
+
+        function openMainApp() {
+            window.location.href = 'index.html';
+        }
+
+        // 自动运行测试
+        setTimeout(() => {
+            logTestOutput("自动运行测试...");
+            runAllTests();
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,799 @@
+/** styles.css **/
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: block;
+}
+
+.timer-card {
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+}
+
+/* 在线人数标签样式 */
+.online-tag {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px 10px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.online-tag .dot {
+    color: #4CAF50; /* 绿色圆点表示在线 */
+    margin-right: 3px;
+    animation: blink 2s infinite; /* 呼吸灯效果 */
+}
+
+.online-tag .highlight {
+    color: #fff;
+    font-weight: bold;
+    margin: 0 2px;
+}
+
+/* 呼吸灯动画 */
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+.level-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+}
+
+.badge-emoji {
+    font-size: 20px;
+    margin-right: 8px;
+}
+
+.badge-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #FFD700;
+}
+
+.time-display {
+    margin: 10px 0;
+}
+
+.time-display .days {
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.sub-time {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+/* 主标签页样式 */
+.tab-header {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.tab {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.tab.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.tab-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-title {
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+    display: block;
+}
+
+.progress-item {
+    margin-bottom: 15px;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.stats-section {
+    margin: 20px 0;
+}
+
+.stat-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #667eea;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #666;
+}
+
+.action-grid {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-sos {
+    background-color: #ff4757 !important;
+    color: white !important;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 15px;
+    flex: 1;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-reset {
+    background-color: #e0e0e0 !important;
+    color: #666 !important;
+    font-size: 14px;
+    border-radius: 25px;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 15px;
+    flex: 1;
+    border: none;
+    cursor: pointer;
+}
+
+.tip {
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+    margin-top: 20px;
+}
+
+/* 社区页面样式 */
+.community-header {
+    margin-bottom: 15px;
+}
+
+.community-tab-header {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.community-tab {
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.community-tab.active {
+    font-weight: bold;
+    transform: scale(1.05);
+}
+
+.community-tab.active.confession {
+    background: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+.community-tab.active.honor {
+    background: #fff9db;
+    color: #fcc419;
+    border: 1px solid #fcc419;
+}
+
+.post-list {
+    height: calc(100vh - 200px);
+    margin-bottom: 50px;
+}
+
+.post-card {
+    margin: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.post-card:active {
+    transform: scale(0.98);
+}
+
+/* 忏悔墙样式：深沉、反思 */
+.post-card.confession {
+    background: #f8f9fa;
+    border-left: 4px solid #6c757d;
+}
+
+/* 光荣榜样式：明亮、激励 */
+.post-card.honor {
+    background: #fff9db;
+    border-left: 4px solid #fcc419;
+}
+
+.post-content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+}
+
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.nickname {
+    font-size: 12px;
+    color: #999;
+}
+
+.time {
+    font-size: 12px;
+    color: #999;
+}
+
+/* 悬浮发布按钮 */
+.fab {
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.fab:active {
+    transform: scale(0.9);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.6);
+}
+
+/* 重要内容区域 - 总是可见 */
+.important-content {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.progress-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checkin-section {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.btn-checkin {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 15px;
+    margin-bottom: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.checkin-streak {
+    font-size: 12px;
+    color: #667eea;
+    text-align: center;
+}
+
+.emergency-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* 空状态样式 */
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: #999;
+}
+
+.empty-text {
+    font-size: 16px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.empty-subtitle {
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+/* 评论功能样式 */
+.comment-container {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.comment-icon {
+    font-size: 14px;
+    margin-right: 4px;
+}
+
+.comment-count {
+    font-size: 12px;
+    color: #666;
+}
+
+.comments-section {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.comments-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.comment-item {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-nick {
+    font-size: 12px;
+    color: #667eea;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.comment-content {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.empty-comments {
+    text-align: center;
+    padding: 10px;
+    color: #999;
+    font-size: 12px;
+}
+
+.add-comment-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 25px;
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+    border: none;
+}
+
+.add-comment-btn:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+/* 点赞按钮样式 */
+.like-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.like-icon {
+    font-size: 14px;
+    margin-right: 4px;
+}
+
+.like-count {
+    font-size: 12px;
+    color: #666;
+}
+
+/* 新用户引导模态框样式 */
+.welcome-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 300px;
+    padding: 0;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    overflow: hidden;
+    animation: modalFadeIn 0.4s ease-out;
+    transform: scale(1);
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-header {
+    padding: 20px 20px 10px;
+    text-align: center;
+    position: relative;
+}
+
+.welcome-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: white;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-btn:active {
+    transform: scale(0.9);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.guide-content {
+    padding: 10px 20px 20px;
+    background: white;
+    border-radius: 15px 15px 0 0;
+    margin: 0 10px;
+    position: relative;
+    top: -10px;
+}
+
+.guide-step {
+    text-align: center;
+    padding: 10px 0;
+    animation: stepFadeIn 0.3s ease-out;
+}
+
+@keyframes stepFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.step-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    display: block;
+    margin-bottom: 15px;
+    padding: 0 10px;
+}
+
+.step-image {
+    margin: 15px 0;
+}
+
+.big-emoji {
+    font-size: 60px;
+    display: block;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.nav-btn {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+.prev-btn {
+    background: #f8f9fa;
+    color: #667eea;
+    margin-right: 10px;
+    border: 1px solid #667eea;
+}
+
+.next-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+/* 功能提示气泡样式 */
+.tooltip {
+    position: fixed;
+    z-index: 9998;
+    max-width: 200px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: tooltipFadeIn 0.3s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tooltip-text {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.tooltip-arrow {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.close-tooltip {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 18px;
+    color: white;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-tooltip:active {
+    transform: scale(0.9);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 定位不同的提示气泡 */
+.timer-tooltip {
+    top: 125px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.checkin-tooltip {
+    top: 275px;
+    left: 40px;
+}
+
+.sos-tooltip {
+    top: 325px;
+    right: 40px;
+}
+
+.community-tooltip {
+    top: 425px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.progress-tooltip {
+    top: 500px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 自定义进度条样式 */
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+progress[value] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+}
+
+progress[value]::-webkit-progress-bar {
+    background-color: #E0E0E0;
+    border-radius: 3px;
+}
+
+progress[value]::-webkit-progress-value {
+    background-color: #4CAF50;
+    border-radius: 3px;
+}
+
+#p2Bar::-webkit-progress-value {
+    background-color: #2196F3;
+}
+
+/* 隐藏元素 */
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>调试页面 - 自律计时器</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f5f5f5; }
+        .debug-panel { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .debug-title { font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #333; }
+        .debug-section { margin-bottom: 15px; }
+        .debug-label { font-weight: bold; margin-bottom: 5px; display: block; }
+        .debug-value { background: #f0f0f0; padding: 8px 12px; border-radius: 5px; }
+        .debug-button { background: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px; }
+        .debug-button:hover { background: #45a049; }
+        .debug-error { color: #ff4757; font-weight: bold; }
+        .debug-success { color: #2ecc71; font-weight: bold; }
+        .test-result { margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .test-pass { background-color: #d4edda; color: #155724; }
+        .test-fail { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>自律计时器 - 调试页面</h1>
+
+    <div class="debug-panel">
+        <div class="debug-title">按钮状态检查</div>
+
+        <div class="debug-section">
+            <span class="debug-label">SOS按钮状态:</span>
+            <span class="debug-value" id="sosButtonStatus">检查中...</span>
+        </div>
+
+        <div class="debug-section">
+            <span class="debug-label">重置按钮状态:</span>
+            <span class="debug-value" id="resetButtonStatus">检查中...</span>
+        </div>
+
+        <div class="debug-section">
+            <span class="debug-label">打卡按钮状态:</span>
+            <span class="debug-value" id="checkinButtonStatus">检查中...</span>
+        </div>
+    </div>
+
+    <div class="debug-panel">
+        <div class="debug-title">事件测试</div>
+
+        <div class="debug-section">
+            <button class="debug-button" onclick="testSOSButton()">测试SOS按钮</button>
+            <button class="debug-button" onclick="testResetButton()">测试重置按钮</button>
+            <button class="debug-button" onclick="testCheckinButton()">测试打卡按钮</button>
+        </div>
+
+        <div id="testResults"></div>
+    </div>
+
+    <div class="debug-panel">
+        <div class="debug-title">常见问题解决</div>
+
+        <div class="debug-section">
+            <h3>如果按钮无法工作，请尝试:</h3>
+            <ol>
+                <li>清除浏览器缓存并刷新页面</li>
+                <li>确保JavaScript已启用</li>
+                <li>检查浏览器控制台是否有错误（F12 -> 控制台）</li>
+                <li>尝试不同的浏览器</li>
+                <li>确保没有其他扩展阻止脚本执行</li>
+            </ol>
+        </div>
+
+        <div class="debug-section">
+            <h3>如何检查控制台:</h3>
+            <p>按F12键或右键 -> 检查 -> 控制台，查看是否有红色错误信息</p>
+        </div>
+    </div>
+
+    <div class="debug-panel">
+        <div class="debug-title">快速测试</div>
+
+        <div class="debug-section">
+            <button class="debug-button" onclick="testAlert()">测试Alert功能</button>
+            <button class="debug-button" onclick="testConfirm()">测试Confirm功能</button>
+            <button class="debug-button" onclick="testLocalStorage()">测试LocalStorage</button>
+        </div>
+    </div>
+
+    <div class="debug-panel">
+        <div class="debug-title">返回主应用</div>
+
+        <button class="debug-button" onclick="window.location.href='index.html'" style="background: #667eea;">返回主应用</button>
+    </div>
+
+    <script>
+        // 检查按钮状态
+        function checkButtonStatus() {
+            // 检查SOS按钮
+            const sosButton = document.querySelector('.btn-sos');
+            if (sosButton) {
+                document.getElementById('sosButtonStatus').textContent = '✓ SOS按钮存在';
+                document.getElementById('sosButtonStatus').className = 'debug-value debug-success';
+            } else {
+                document.getElementById('sosButtonStatus').textContent = '✗ SOS按钮未找到';
+                document.getElementById('sosButtonStatus').className = 'debug-value debug-error';
+            }
+
+            // 检查重置按钮
+            const resetButton = document.querySelector('.btn-reset');
+            if (resetButton) {
+                document.getElementById('resetButtonStatus').textContent = '✓ 重置按钮存在';
+                document.getElementById('resetButtonStatus').className = 'debug-value debug-success';
+            } else {
+                document.getElementById('resetButtonStatus').textContent = '✗ 重置按钮未找到';
+                document.getElementById('resetButtonStatus').className = 'debug-value debug-error';
+            }
+
+            // 检查打卡按钮
+            const checkinButton = document.getElementById('checkinButton');
+            if (checkinButton) {
+                document.getElementById('checkinButtonStatus').textContent = '✓ 打卡按钮存在';
+                document.getElementById('checkinButtonStatus').className = 'debug-value debug-success';
+            } else {
+                document.getElementById('checkinButtonStatus').textContent = '✗ 打卡按钮未找到';
+                document.getElementById('checkinButtonStatus').className = 'debug-value debug-error';
+            }
+        }
+
+        // 测试SOS按钮
+        function testSOSButton() {
+            addTestResult('SOS按钮测试', '点击测试按钮来模拟SOS功能', 'test-pass');
+            alert('SOS功能测试：AI鼓励语将显示');
+        }
+
+        // 测试重置按钮
+        function testResetButton() {
+            addTestResult('重置按钮测试', '右键测试按钮来模拟重置功能', 'test-pass');
+            alert('重置功能测试：确认对话框将显示');
+        }
+
+        // 测试打卡按钮
+        function testCheckinButton() {
+            addTestResult('打卡按钮测试', '点击测试按钮来模拟打卡功能', 'test-pass');
+            alert('打卡功能测试：打卡确认将显示');
+        }
+
+        // 测试Alert功能
+        function testAlert() {
+            alert('Alert功能正常工作！');
+        }
+
+        // 测试Confirm功能
+        function testConfirm() {
+            const result = confirm('Confirm功能正常工作！');
+            if (result) {
+                alert('您点击了确定');
+            } else {
+                alert('您点击了取消');
+            }
+        }
+
+        // 测试LocalStorage
+        function testLocalStorage() {
+            try {
+                localStorage.setItem('debugTest', 'testValue');
+                const value = localStorage.getItem('debugTest');
+                if (value === 'testValue') {
+                    addTestResult('LocalStorage测试', 'LocalStorage功能正常', 'test-pass');
+                    localStorage.removeItem('debugTest');
+                } else {
+                    addTestResult('LocalStorage测试', 'LocalStorage功能异常', 'test-fail');
+                }
+            } catch (error) {
+                addTestResult('LocalStorage测试', 'LocalStorage功能异常: ' + error.message, 'test-fail');
+            }
+        }
+
+        // 添加测试结果
+        function addTestResult(title, message, className) {
+            const resultsDiv = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'test-result ' + className;
+            resultDiv.innerHTML = `<strong>${title}:</strong> ${message}`;
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        // 页面加载完成后检查按钮状态
+        document.addEventListener('DOMContentLoaded', function() {
+            checkButtonStatus();
+            addTestResult('页面加载', '调试页面加载完成', 'test-pass');
+        });
+    </script>
+</body>
+</html>

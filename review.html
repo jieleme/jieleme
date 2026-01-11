@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>反思复盘 - 自律计时器</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .review-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .review-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .review-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .review-subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .review-stats {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stat-item {
+            font-size: 18px;
+            margin: 8px 0;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .review-form {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .review-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #666;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .review-tips {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .review-tips h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        .review-tips ul {
+            padding-left: 20px;
+        }
+
+        .review-tips li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="review-container">
+            <div class="review-header">
+                <h1 class="review-title">📝 反思复盘</h1>
+                <p class="review-subtitle">记录你的成长之旅</p>
+            </div>
+
+            <div class="review-stats" id="reviewStats">
+                <div class="stat-item">
+                    本次坚持: <span class="stat-value" id="totalTime">加载中...</span>
+                </div>
+                <div class="stat-item">
+                    复盘次数: <span class="stat-value" id="reviewCount">加载中...</span>
+                </div>
+            </div>
+
+            <div class="review-form">
+                <div class="form-group">
+                    <label class="form-label">🎯 本次坚持的收获:</label>
+                    <textarea id="achievements" class="form-textarea" placeholder="描述你在本次坚持过程中获得的收获和成长..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">💡 经验教训:</label>
+                    <textarea id="lessons" class="form-textarea" placeholder="总结经验教训，帮助未来更好地坚持..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🚀 未来改进:</label>
+                    <textarea id="improvements" class="form-textarea" placeholder="计划未来如何改进和提升..."></textarea>
+                </div>
+            </div>
+
+            <div class="review-tips">
+                <h3>反思建议:</h3>
+                <ul>
+                    <li>具体描述你的感受和变化</li>
+                    <li>记录成功的策略和方法</li>
+                    <li>分析失败的原因和触发点</li>
+                    <li>制定具体的改进计划</li>
+                    <li>保持积极和鼓励的态度</li>
+                </ul>
+            </div>
+
+            <div class="review-actions">
+                <button class="btn-secondary" onclick="goBackToMain()">返回主页</button>
+                <button class="btn-primary" onclick="saveReview()">保存反思</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 从URL参数中获取数据
+        function getUrlParams() {
+            const params = {};
+            const queryString = window.location.search.substring(1);
+            const pairs = queryString.split('&');
+
+            for (let pair of pairs) {
+                const [key, value] = pair.split('=');
+                if (key && value) {
+                    params[key] = decodeURIComponent(value);
+                }
+            }
+
+            return params;
+        }
+
+        // 显示统计数据
+        function displayStats() {
+            const params = getUrlParams();
+
+            // 计算总时间显示
+            const days = params.days || '0';
+            const hours = params.hours || '0';
+            const minutes = params.minutes || '0';
+            const seconds = params.seconds || '0';
+
+            const totalTime = `${days}天 ${hours}小时 ${minutes}分 ${seconds}秒`;
+            document.getElementById('totalTime').textContent = totalTime;
+
+            // 获取复盘次数
+            const reviews = JSON.parse(localStorage.getItem('reviewHistory')) || [];
+            document.getElementById('reviewCount').textContent = reviews.length;
+        }
+
+        // 保存反思数据
+        function saveReview() {
+            const achievements = document.getElementById('achievements').value;
+            const lessons = document.getElementById('lessons').value;
+            const improvements = document.getElementById('improvements').value;
+
+            if (!achievements && !lessons && !improvements) {
+                alert('请填写至少一项反思内容');
+                return;
+            }
+
+            const params = getUrlParams();
+
+            const reviewData = {
+                date: new Date().toISOString(),
+                days: params.days || 0,
+                hours: params.hours || 0,
+                minutes: params.minutes || 0,
+                seconds: params.seconds || 0,
+                totalSeconds: params.totalSeconds || 0,
+                achievements: achievements,
+                lessons: lessons,
+                improvements: improvements
+            };
+
+            // 保存到复盘历史
+            const reviews = JSON.parse(localStorage.getItem('reviewHistory')) || [];
+            reviews.push(reviewData);
+            localStorage.setItem('reviewHistory', JSON.stringify(reviews));
+
+            // 重置计时器
+            const newStartTime = Date.now();
+            localStorage.setItem('startTime', newStartTime);
+
+            alert('反思保存成功！计时器已重置。');
+            window.location.href = 'index.html';
+        }
+
+        // 返回主页
+        function goBackToMain() {
+            if (confirm('确定要返回主页吗？未保存的反思内容将会丢失。')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // 页面加载完成后显示数据
+        document.addEventListener('DOMContentLoaded', function() {
+            displayStats();
+
+            // 从localStorage加载可能的草稿
+            const draft = localStorage.getItem('reviewDraft');
+            if (draft) {
+                try {
+                    const draftData = JSON.parse(draft);
+                    document.getElementById('achievements').value = draftData.achievements || '';
+                    document.getElementById('lessons').value = draftData.lessons || '';
+                    document.getElementById('improvements').value = draftData.improvements || '';
+                } catch (error) {
+                    console.error('加载草稿失败:', error);
+                }
+            }
+
+            // 定期保存草稿
+            setInterval(function() {
+                const draftData = {
+                    achievements: document.getElementById('achievements').value,
+                    lessons: document.getElementById('lessons').value,
+                    improvements: document.getElementById('improvements').value
+                };
+                localStorage.setItem('reviewDraft', JSON.stringify(draftData));
+            }, 30000); // 每30秒自动保存草稿
+        });
+    </script>
+</body>
+</html>

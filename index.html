@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自律计时器-2026增强版</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 新用户引导相关UI（已移除） -->
+        <!--
+        <div class="welcome-modal" id="welcomeModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="welcome-title">🌱 欢迎来到自律计时器-2026增强版</span>
+                    <span class="close-btn" id="closeWelcomeModal">×</span>
+                </div>
+
+                <div class="guide-content">
+                    <div class="guide-step" id="step0">
+                        <span class="step-title">🌟 新的开始</span>
+                        <span class="step-description">欢迎加入自律大家庭！我们将帮助你重获自由，成为本能的主人。</span>
+                        <div class="step-image">
+                            <span class="big-emoji">🧠✨</span>
+                        </div>
+                    </div>
+
+                    <div class="guide-step" id="step1" style="display: none;">
+                        <span class="step-title">⏱️ 计时器功能</span>
+                        <span class="step-description">我们的智能计时器将记录你的清醒时长，并显示大脑恢复进度。</span>
+                        <div class="step-image">
+                            <span class="big-emoji">⏰📊</span>
+                        </div>
+                    </div>
+
+                    <div class="guide-step" id="step2" style="display: none;">
+                        <span class="step-title">⚠️ 紧急干预</span>
+                        <span class="step-description">当冲动来袭时，立即点击SOS按钮获得AI支持和深呼吸引导。</span>
+                        <div class="step-image">
+                            <span class="big-emoji">🤖💬</span>
+                        </div>
+                    </div>
+
+                    <div class="guide-step" id="step3" style="display: none;">
+                        <span class="step-title">🎉 准备就绪</span>
+                        <span class="step-description">你已经了解所有核心功能，现在可以开始你的自律之旅了！</span>
+                        <div class="step-image">
+                            <span class="big-emoji">🚀🌈</span>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button class="nav-btn prev-btn" id="prevGuideStep" style="display: none;">上一步</button>
+                        <button class="nav-btn next-btn" id="nextGuideStep">下一步</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tooltip timer-tooltip" id="timerTooltip">
+            <span class="tooltip-text">这是你的清醒计时器，记录你的坚持时长</span>
+            <span class="tooltip-arrow">▼</span>
+            <span class="close-tooltip" onclick="closeAllTooltips()">×</span>
+        </div>
+
+        <div class="tooltip checkin-tooltip" id="checkinTooltip">
+            <span class="tooltip-text">每日打卡记录你的进步，建立连续守护记录</span>
+            <span class="tooltip-arrow">▼</span>
+            <span class="close-tooltip" onclick="closeAllTooltips()">×</span>
+        </div>
+
+        <div class="tooltip sos-tooltip" id="sosTooltip">
+            <span class="tooltip-text">冲动来袭时点击这里，获得AI支持和深呼吸引导</span>
+            <span class="tooltip-arrow">▼</span>
+            <span class="close-tooltip" onclick="closeAllTooltips()">×</span>
+        </div>
+
+        <div class="tooltip progress-tooltip" id="progressTooltip">
+            <span class="tooltip-text">查看你的大脑恢复进度和成就等级</span>
+            <span class="tooltip-arrow">▼</span>
+            <span class="close-tooltip" onclick="closeAllTooltips()">×</span>
+        </div>
+        -->
+
+        <!-- 计时器卡片 -->
+        <div class="timer-card">
+            <!-- 在线人数标签 -->
+            <div class="online-tag">
+                <span class="dot">●</span>
+                当前有 <span class="highlight" id="onlineCount">521</span> 位战友正在共同守护
+            </div>
+
+            <div class="level-badge">
+                <span class="badge-emoji" id="levelBadge">🌱</span>
+                <span class="badge-text" id="levelName">觉醒者</span>
+            </div>
+            <span class="label">你已清醒守护</span>
+            <div class="time-display">
+                <span class="days" id="days">0</span><span class="unit">天</span>
+            </div>
+            <div class="sub-time" id="subTime">0小时0分0秒</div>
+        </div>
+
+        <!-- 重要内容区域 - 总是可见 -->
+        <div class="important-content">
+            <!-- 进度和打卡信息 -->
+            <div class="progress-summary">
+                <div class="checkin-section">
+                    <button class="btn-checkin" id="checkinButton">📅 今日未打卡</button>
+                    <div class="checkin-streak" id="checkinStreak" style="display: none;">
+                        🔥 <span id="streakDays">0</span>天连续守护
+                    </div>
+                </div>
+
+                <div class="stats-section">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalReviews">0</span>
+                        <span class="stat-label">复盘次数</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 紧急按钮 - 总是可见 -->
+            <div class="emergency-section">
+                <button class="btn-sos">⚠️ 紧急干预</button>
+                <button class="btn-reset">右击重置(破戒)</button>
+            </div>
+        </div>
+
+        <!-- 进度追踪页面 -->
+        <div class="tab-content">
+            <div class="section-title">生理恢复进度</div>
+            <div class="progress-container">
+                <div class="progress-item">
+                    <div class="progress-info">
+                        <span>多巴胺受体修复</span>
+                        <span id="p1Progress">0%</span>
+                    </div>
+                    <progress id="p1Bar" value="0" max="100" class="progress-bar"></progress>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-info">
+                        <span>精力水平回升</span>
+                        <span id="p2Progress">0%</span>
+                    </div>
+                    <progress id="p2Bar" value="0" max="100" class="progress-bar"></progress>
+                </div>
+            </div>
+            <div class="tip">—— 真正的强者，是本能的主人 ——</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
